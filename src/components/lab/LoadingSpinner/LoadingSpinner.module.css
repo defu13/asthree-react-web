@@ -1,0 +1,36 @@
+.spinner {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    gap: 2rem;
+}
+
+.spinner .dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-neutral-200);
+    border-radius: 50%;
+    animation: bounce 0.6s infinite alternate;
+}
+
+.spinner .dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.spinner .dot:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.spinner .dot:nth-child(3) {
+    animation-delay: 0.8s;
+}
+
+@keyframes bounce {
+    to {
+        transform: translateY(15px);
+    }
+}
