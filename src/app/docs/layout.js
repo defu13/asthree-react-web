@@ -1,17 +1,20 @@
 // app/docs/layout.js
+"use client";
 import DocsSidebar from "@/components/nav/DocsSidebar";
+import FooterComponent from "@/components/ui/FooterComponent";
 
 export default function DocsLayout({ children }) {
     return (
         <div
-            className="max-w-7xl mx-auto flex px-6"
-            style={{
-                height: "calc(100vh - var(--navbar-height))",
-                marginTop: "var(--navbar-height)",
-            }}
+            className="mx-auto flex flex-col md:flex-row"
         >
             <DocsSidebar />
-            <main className="flex-1 py-8 pl-8 min-w-0">{children}</main>
+            <div className="flex-1 py-8 min-w-0">
+                <main className="flex-1">{children}</main>
+                <div className="w-full max-w-5xl mx-auto md:px-8 px-6 mt-32">
+                    <FooterComponent />
+                </div>
+            </div>
         </div>
     );
 }

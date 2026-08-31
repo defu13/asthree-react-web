@@ -18,7 +18,7 @@ function PresetSync() {
 
 function LabApp() {
     return (
-        <div className="font-mono">
+        <div className="font-mono dark">
             <PresetSync />
             <AccentSync />
             <HydrationGate>
@@ -30,7 +30,7 @@ function LabApp() {
                 </main>
             </HydrationGate>
             <div className="absolute block inset-0 -z-20 pointer-events-none">
-                <Noise patternAlpha={6} />
+                <Noise patternAlpha={4}  />
             </div>
         </div>
     );

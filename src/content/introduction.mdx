@@ -1,7 +1,43 @@
-{/* content/introduction.mdx */}
-
 # Introduction
 
-**asthree-react** is a React component that renders 3D models with a real-time ASCII art effect.
+**asthree-react** is a React component that renders 3D models with a real-time ASCII art effect. Drop it into any React project and get an interactive, customizable ASCII render of any `.glb` model — no configuration required.
 
-Drop it into any React project and get an interactive, customizable ASCII render of any `.glb` model.
+## What it does
+
+The component takes a 3D model and a lighting environment, renders them with Three.js, and applies a real-time ASCII post-processing shader on top. The result is a live, interactive ASCII representation of your model that reacts to lighting, camera angle, and every visual parameter you expose.
+
+```jsx
+import { AsthreeRender } from "@defu13/asthree-react";
+
+<AsthreeRender model="/models/model.glb" hdr="/hdr/studio.hdr" />
+```
+
+## Why ASCII
+
+Rendering 3D content as ASCII art gives web projects a distinctive, retro-technical aesthetic without sacrificing interactivity. Unlike a static ASCII image, this component recalculates the character grid every frame, so lighting changes, camera movement, and model rotation all update the ASCII pattern live.
+
+## How it works
+
+Under the hood, the component:
+
+1. Loads your `.glb` model with Three.js and `@react-three/fiber`
+2. Applies studio lighting from an `.hdr` environment file
+3. Runs a custom `postprocessing` effect that samples brightness per cell and maps it to ASCII characters
+4. Optionally applies a glow effect, tint color, and volume shading for depth
+
+None of this requires you to touch Three.js directly — every visual parameter is exposed as a plain JavaScript settings object.
+
+## Key features
+
+### Real-time rendering
+Every parameter — cell size, color, glow, camera angle, lighting — updates instantly, no rebuild or reload required.
+
+### Presets
+Configurations can be encoded into short, URL-safe strings using the companion [Asthree Lab](/lab) editor. Generate a preset visually, copy the code, and paste it into your component.
+
+### Interaction controls
+Orbit and zoom are built in and can be toggled independently, so you can use the component as a static hero image or a fully interactive viewer.
+
+## Next steps
+
+Head to [Installation](/docs/installation) to add the package to your project, or jump straight to [Usage](/docs/usage) if you already have it installed.

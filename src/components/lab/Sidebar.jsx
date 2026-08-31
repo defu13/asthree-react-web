@@ -11,6 +11,7 @@ import ShinyText from "./ShinyText";
 import { PresetControls } from "./PresetControls";
 import { CaptureControls } from "./CaptureControls";
 import { useCaptureStore } from "@/lib/captureStore";
+import FooterComponent from "../ui/FooterComponent";
 
 export default function Sidebar({ children }) {
     const [open, setOpen] = useState(true);
@@ -32,8 +33,8 @@ export default function Sidebar({ children }) {
                 ${open ? "translate-x-0" : "-translate-x-full"}
             `}
                 style={{
-                    height: "calc(100vh - var(--navbar-height))",
-                    marginTop: "var(--navbar-height)",
+                    height: "calc(100vh - calc(var(--navbar-height)))",
+                    marginTop: "calc(var(--navbar-height))",
                 }}
             >
                 {/* Tab container */}
@@ -42,9 +43,9 @@ export default function Sidebar({ children }) {
                         boxShadow:
                             "0 4px 32px #00000066, inset 0 .5px #ffffff0f",
                     }}
-                    className={`w-full h-full overflow-hidden border border-neutral-50/10 rounded-2xl relative`}
+                    className={`w-full h-full overflow-hidden border border-neutral-50/10 rounded-xl relative`}
                 >
-                    <div
+                    {/* <div
                         style={{
                             width: "100%",
                             height: "100%",
@@ -67,7 +68,7 @@ export default function Sidebar({ children }) {
                             gradientTo="rgba(255, 255, 255, 0.15)"
                             glowColor="transparent"
                         />
-                    </div>
+                    </div> */}
                     <div
                         className={`w-full h-full absolute inset-0 backdrop-blur-lg`}
                         style={{
@@ -83,37 +84,7 @@ export default function Sidebar({ children }) {
                 </div>
 
                 <div className="w-full flex justify-between items-end">
-                    <footer className="flex flex-col text-neutral-600 truncate">
-                        <a
-                            href="https://yubaldefuente.vercel.app/"
-                            target="_blank"
-                            title="Yubal De Fuente - Portfolio"
-                            className="flex w-fit myLink hover:underline"
-                        >
-                            <ShinyText
-                                className="min-[510px]:text-sm text-xs tracking-tighter truncate"
-                                speed={2.5}
-                                delay={1}
-                                color="#525252"
-                                shineColor="#ffffff"
-                                spread={120}
-                                direction="left"
-                                yoyo={false}
-                                pauseOnHover={false}
-                                disabled={false}
-                            >
-                                © 2026 Yubal De Fuente.
-                            </ShinyText>
-                        </a>
-                        <span
-                            className="min-[510px]:text-xs text-[10px] truncate"
-                            style={{
-                                fontFamily: "monospace",
-                            }}
-                        >
-                            Hecho con pasión y dedicación {"<3"}
-                        </span>
-                    </footer>
+                    <FooterComponent />
 
                     {/* Reset All Button */}
                     <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
@@ -125,9 +96,8 @@ export default function Sidebar({ children }) {
                         >
                             Reset All
                         </Button>
-                        <Popover.Content placement="top">
+                        <Popover.Content placement="top" className="border border-neutral-50/10 dark rounded-2xl">
                             <Popover.Dialog>
-                                <Popover.Arrow />
                                 <div className="flex flex-col gap-2 items-center">
                                     <span>Sure?</span>
                                     <ResetButton
@@ -144,15 +114,15 @@ export default function Sidebar({ children }) {
             </div>
 
             <div
-                className={`flex flex-col gap-2 fixed top-0 z-50 transition-all duration-300 h-full py-4 pointer-events-none justify-between
+                className={`flex flex-col gap-2 fixed top-0 z-20 transition-all duration-300 h-full py-4 pointer-events-none justify-between
                 ${open ? "min-[510px]:left-[450px] left-8" : "left-4"}
                 `}
                 style={{
-                    height: "calc(100vh - var(--navbar-height))",
-                    marginTop: "var(--navbar-height)",
+                    height: "calc(100vh - calc(var(--navbar-height)))",
+                    marginTop: "calc(var(--navbar-height))",
                 }}
             >
-                <div className="flex flex-col gap-2">
+                <div className="flex min-[510px]:flex-col flex-row gap-2">
                     {/* Toggle Button */}
                     <Button
                         onPress={() => setOpen(!open)}

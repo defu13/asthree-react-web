@@ -1,0 +1,60 @@
+# Installation
+
+## Requirements
+
+- React 18 or newer
+- A project that can serve static assets (`.glb` models, `.hdr` files) from a `public` folder — this works out of the box with Next.js, Vite, and Create React App
+
+## Install the package
+
+```bash
+npm i @defu13/asthree-react
+```
+
+## Install peer dependencies
+
+The component relies on the React Three Fiber ecosystem. These are listed as peer dependencies and must be installed alongside the package:
+
+```bash
+npm i react react-dom three @react-three/fiber @react-three/drei @react-three/postprocessing postprocessing
+```
+
+If you're using a package manager other than npm, translate the command accordingly (`pnpm add`, `yarn add`).
+
+## Assets you'll need
+
+The component doesn't ship with a default model or lighting file — you provide your own.
+
+### HDR lighting file
+
+Download a free HDR environment map from [Poly Haven](https://polyhaven.com/a/studio_small_03) and place it in your project's public folder:
+
+public/hdr/studio.hdr
+
+
+### 3D model file
+
+Download a free `.glb` model from [Sketchfab](https://sketchfab.com/feed) and place it at:
+
+public/models/model.glb
+
+
+Only `.glb` is supported — if your model is in another format (`.gltf` with separate textures, `.fbx`, `.obj`), convert it to `.glb` first. Most 3D software and online converters support this.
+
+## Verify the installation
+
+Render the component with the default settings to confirm everything is wired up correctly:
+
+```jsx
+import { AsthreeRender } from "@defu13/asthree-react";
+
+export default function App() {
+    return (
+        <div style={{ width: "100%", height: "500px" }}>
+            <AsthreeRender model="/models/model.glb" hdr="/hdr/studio.hdr" />
+        </div>
+    );
+}
+```
+
+If you see a rotating ASCII render of your model, you're set up correctly. Continue to [Usage](/docs/usage) to learn about presets, manual settings, and interaction controls.

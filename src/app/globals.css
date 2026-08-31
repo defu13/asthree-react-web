@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @import "@heroui/styles";
 
 :root {
@@ -6,17 +7,21 @@
     --color-accent: #5C3FF2;
     --color-accent-soft: rgba(107, 81, 240, 0.15);
     --color-selection: rgba(201, 201, 201, 0.164);
-    --navbar-height: 56px;
+    --navbar-height: 70px;
 }
 
 @theme {
     --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
     --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+
+    --breakpoint-xs: 480px;
 }
 
 body {
     background-color: #0a0a0a;
     color: #e5e5e5;
+    /* background-color: #e5e5e5;
+    color: #0a0a0a; */
 }
 
 ::selection {
@@ -85,3 +90,97 @@ body {
     opacity: 1;
     transform: translateX(15px);
 }
+
+/* ---------- Estilos del contenido MDX ---------- */
+
+.prose {
+    --tw-prose-body: #d4d4d4;
+    --tw-prose-headings: #f5f5f5;
+    --tw-prose-links: var(--color-accent);
+    --tw-prose-bold: #f5f5f5;
+    --tw-prose-code: #f5f5f5;
+    --tw-prose-quotes: #a3a3a3;
+    --tw-prose-quote-borders: #404040;
+    --tw-prose-hr: #262626;
+    --tw-prose-th-borders: #333333;
+    --tw-prose-td-borders: #262626;
+    max-width: none;
+}
+
+.prose h2,
+.prose h3 {
+    scroll-margin-top: 96px;
+    font-weight: 600;
+}
+
+.prose h2 {
+    border-bottom: 1px solid #262626;
+    padding-bottom: 0.5rem;
+}
+
+.prose a {
+    text-decoration: none;
+    border-bottom: 1px dashed var(--color-accent-soft);
+    transition: border-color 0.15s ease;
+}
+.prose a:hover {
+    border-bottom-color: var(--color-accent);
+}
+
+.prose :not(pre) > code {
+    background-color: rgba(107, 81, 240, 0.1);
+    color: #c4b5fd;
+    padding: 0.15em 0.4em;
+    border-radius: 0.35em;
+    font-size: 0.85em;
+    font-weight: 500;
+}
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+    content: "";
+}
+
+.prose pre {
+    background-color: #0a0a0a !important;
+    border: 1px solid #262626;
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+}
+
+.prose table {
+    font-size: 0.9em;
+}
+.prose thead th {
+    color: #f5f5f5;
+    font-weight: 600;
+}
+.prose tbody tr {
+    border-color: #262626;
+}
+
+.prose pre.shiki {
+    background-color: #0a0a0a00 !important;
+}
+.prose pre.shiki span {
+    background-color: transparent !important;
+}
+
+/* Invierte el color de fondo */
+html.theme-light {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+/* Evita que imágenes/vídeos también se inviertan (opcional pero recomendable) */
+html.theme-light img,
+html.theme-light video {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+/* Icono del tema */
+/* Por defecto (tema oscuro): mostrar sol, ocultar luna */
+.theme-icon-sun  { display: block; }
+.theme-icon-moon { display: none; }
+
+/* Tema claro: mostrar luna, ocultar sol */
+html.theme-light .theme-icon-sun  { display: none; }
+html.theme-light .theme-icon-moon { display: block; }

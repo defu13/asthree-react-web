@@ -1,0 +1,90 @@
+# Usage
+
+## Basic usage
+
+At minimum, `AsthreeRender` needs a `model` and an `hdr` path. Without any further configuration, it renders with sensible defaults — auto-rotating, orbit and zoom enabled, standard ASCII style.
+
+```jsx
+<AsthreeRender model="/models/model.glb" hdr="/hdr/studio.hdr" />
+```
+
+## Presets vs manual settings
+
+There are two ways to configure the render: a **preset code** or a **settings object**. You only need one of them — if both are provided, `preset` takes priority.
+
+### Using a preset
+
+Presets are short, URL-safe strings that encode a full configuration. The easiest way to generate one is through the [Asthree Lab](/lab) — a visual editor where you tweak every parameter and copy the resulting code.
+
+```jsx
+<AsthreeRender
+    model="/models/model.glb"
+    hdr="/hdr/studio.hdr"
+    preset="AQQh_zNmGQwfAfQiANI"
+/>
+```
+
+See [Presets](/docs/presets) for a full breakdown of how this works.
+
+### Using manual settings
+
+If you'd rather configure values directly in code, pass a `settings` object. You only need to specify the values you want to override — anything omitted falls back to the defaults.
+
+```jsx
+<AsthreeRender
+    model="/models/model.glb"
+    hdr="/hdr/studio.hdr"
+    settings={{
+        ascii: {
+            cellSize: 12,
+            tintColor: "#FF3366",
+            glow: true,
+            glowIntensity: 5,
+        },
+        model: {
+            autoRotate: true,
+            autoRotateSpeed: 0.3,
+        },
+    }}
+/>
+```
+
+See the full list of available fields in [Props](/docs/props).
+
+## Disabling orbit and zoom
+
+By default, users can drag to orbit the model and scroll/pinch to zoom. Both can be disabled independently — useful when the render is used as a static hero background rather than an interactive viewer.
+
+```jsx
+// Fully static — no interaction at all
+<AsthreeRender
+    model="/models/model.glb"
+    hdr="/hdr/studio.hdr"
+    enableOrbit={false}
+    enableZoom={false}
+/>
+```
+
+```jsx
+// Allow zoom but not orbit
+<AsthreeRender
+    model="/models/model.glb"
+    hdr="/hdr/studio.hdr"
+    enableOrbit={false}
+    enableZoom={true}
+/>
+```
+
+## Sizing the canvas
+
+`width` and `height` control the size of the rendering canvas. Both default to `"100%"`, which means the component fills its parent container — make sure the parent has an explicit size (e.g. a fixed height or `aspect-ratio`).
+
+```jsx
+<div style={{ width: "100%", height: "60vh" }}>
+    <AsthreeRender model="/models/model.glb" hdr="/hdr/studio.hdr" />
+</div>
+```
+
+## Custom HDR and models
+
+Any `.glb` and `.hdr` file will work as long as they're publicly reachable from your app — either bundled in your `public` folder or served from a CORS-enabled external URL. Large models slow down initial load, so keeping them under a few megabytes is recommended for a snappy first paint.

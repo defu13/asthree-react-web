@@ -1,0 +1,47 @@
+# Presets
+
+## What is a preset
+
+A preset is a short, URL-safe string that encodes an entire `settings` object. Instead of writing out a full configuration object in your code, you generate a preset visually and pass a single string to the `preset` prop.
+
+```jsx
+<AsthreeRender
+    model="/models/model.glb"
+    hdr="/hdr/studio.hdr"
+    preset="AQQh_zNmGQwfAfQiANI"
+/>
+```
+
+Presets only encode the values that differ from the defaults, so codes stay short even with several customizations — a handful of changed parameters typically produces a string under 20 characters.
+
+## Generating presets with the Lab
+
+The [Asthree Lab](/lab) is a visual editor for the render. Every control you touch — ASCII style, colors, lighting, camera, post-effects — updates the preview live, and the corresponding preset code updates automatically at the bottom of the screen.
+
+1. Open the Lab and configure the render to your liking
+2. Copy the preset code shown in the toolbar
+3. Paste it into the `preset` prop in your project
+
+You can also load an existing preset back into the Lab by pasting its code into the **Load Preset** dialog — useful for tweaking a configuration someone else shared with you.
+
+## Sharing configurations
+
+Every change in the Lab is reflected in the page URL as a `?preset=` query parameter. Copying the URL from your browser lets you share the exact configuration with anyone — opening that link loads the Lab with your settings already applied.
+
+## encodePreset and decodePreset
+
+If you need to generate or read presets programmatically — for example, building your own configuration UI — both functions are exported from the package:
+
+```js
+import { encodePreset, decodePreset } from "@defu13/asthree-react";
+
+const code = encodePreset({
+    ascii: { cellSize: 12, tintColor: "#FF3366" },
+});
+// → a short preset string
+
+const settings = decodePreset(code);
+// → the full settings object, merged with defaults
+```
+
+`decodePreset` always returns a complete settings object — any field not present in the encoded preset is filled in from the defaults, so you never end up with a partial or invalid configuration.

@@ -119,7 +119,7 @@ export function PresetControls() {
             <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
                 <Modal.Backdrop className={`backdrop-blur-sm`} variant="blur">
                     <Modal.Container>
-                        <Modal.Dialog className="p-0 border border-neutral-50/10 rounded-2xl">
+                        <Modal.Dialog className="p-0 border border-neutral-50/10 rounded-2xl backdrop-blur-md dark">
                             <Modal.CloseTrigger />
                             <Modal.Header className="p-4 pb-0">
                                 <Modal.Heading>Open Preset</Modal.Heading>
@@ -139,7 +139,7 @@ export function PresetControls() {
                                         className="text-sm border border-neutral-50/10 py-1.5"
                                         variant="secondary"
                                         autoFocus
-                                        placeholder="Eg-- AQIhBrbUJF83MQ"
+                                        placeholder="E.g.-- AQIhBrbUJF83MQ"
                                         value={inputValue}
                                         onChange={handleInputChange}
                                         onKeyDown={(e) =>
@@ -155,7 +155,7 @@ export function PresetControls() {
                                 </TextField>
                             </Modal.Body>
 
-                            <Modal.Footer className="border-t border-neutral-50/10 mt-2 py-2 px-4 bg-neutral-800/50">
+                            <Modal.Footer className="border-t border-neutral-50/10 mt-2 py-2 px-4">
                                 <Button
                                     variant="outline"
                                     onPress={closeModal}

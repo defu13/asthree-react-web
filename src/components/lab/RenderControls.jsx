@@ -39,21 +39,12 @@ export default function RenderControls() {
     const textSubTitle = "Explore styles for your 3D ASCII rendering";
 
     return (
-        <div className="flex flex-col gap-6 w-full h-full">
-            <div className="flex flex-col items-center z-10 px-4 pt-4">
-                {/* <div className="relative">
-                    <Image
-                        alt="Logo"
-                        src={logo}
-                        className="invert w-full mix-blend-difference"
-                        height={"auto"}
-                    />
-                    <span className="absolute right-0 bottom-0 text-xs">©</span>
-                </div> */}
-                <h1 className="w-full tracking-tighter text-4xl">
+        <div className="flex flex-col gap-4 w-full h-full">
+            <div className="flex-col items-center z-10 px-4 pt-4 min-[510px]:mt-0 mt-12">
+                <h1 className="w-full tracking-tight font-semibold min-[510px]:text-2xl text-lg font-sans text-neutral-50 -mb-1">
                     {textTitle}
                 </h1>
-                <h1 className="w-full tracking-tighter text-neutral-500">
+                <h1 className="w-full text-neutral-500 font-sans min-[510px]:text-base text-sm">
                     {textSubTitle}
                 </h1>
             </div>
@@ -79,7 +70,6 @@ export default function RenderControls() {
                         ))}
                     </Tabs.List>
                 </Tabs.ListContainer>
-                {/* <ScrollShadow> */}
                 {tabsConfig.map((tab) => (
                     <Tabs.Panel
                         key={tab.id}
@@ -89,7 +79,6 @@ export default function RenderControls() {
                         {tab.component}
                     </Tabs.Panel>
                 ))}
-                {/* </ScrollShadow> */}
             </Tabs>
         </div>
     );
