@@ -44,9 +44,9 @@ export default function RenderControls() {
                 <h1 className="w-full tracking-tight font-semibold min-[510px]:text-2xl text-lg font-sans text-neutral-50 -mb-1">
                     {textTitle}
                 </h1>
-                <h1 className="w-full text-neutral-500 font-sans min-[510px]:text-base text-sm">
+                <h2 className="w-full text-neutral-500 font-sans text-sm">
                     {textSubTitle}
-                </h1>
+                </h2>
             </div>
             <Tabs className="w-full z-10 flex-1 min-h-0 pb-4 pt-0 gap-2">
                 <Tabs.ListContainer className="px-4 bg-transparent">

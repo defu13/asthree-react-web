@@ -23,7 +23,7 @@ export function ColorPickerToken({ value, onChange }) {
                 </span>
             </ColorPicker.Trigger>
 
-            <ColorPicker.Popover className="gap-2 p-3 border border-neutral-50/10">
+            <ColorPicker.Popover className="gap-2 p-3 border border-neutral-50/10 dark">
                 <ColorArea
                     aria-label="Color area"
                     className="max-w-full"

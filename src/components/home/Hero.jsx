@@ -115,13 +115,18 @@ export default function Hero() {
 
     return (
         <>
-            <section className="relative w-full min-h-screen flex flex-col gap-6 items-center justify-center overflow-hidden md:p-6 px-6 pb-6 pt-12">
+            <section className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden md:p-6 px-6 pb-6 pt-12">
+                {/* Fade top */}
                 <div className="absolute inset-x-0 top-0 h-44 bg-linear-to-b from-black/45 to-transparent pointer-events-none -z-10 "></div>
+
+                {/* Live demo */}
                 <LiveDemo
                     settings={mode === "settings" ? settings : undefined}
                     preset={mode === "preset" ? activePreset.code : undefined}
                     className="absolute inset-0 -z-20"
                 />
+
+                {/* Background gradient */}
                 <div className="absolute inset-0 -z-30 opacity-65">
                     <Grainient
                         blendSoftness={0.4}
@@ -134,6 +139,15 @@ export default function Hero() {
                         timeSpeed={0.3}
                     />
                 </div>
+
+                {/* Fade bottom */}
+                <div
+                    className="absolute bottom-0 left-0 w-full h-[130px] pointer-events-none"
+                    style={{
+                        background:
+                            "linear-gradient(to top, #0a0a0a 0%, transparent 100%)",
+                    }}
+                />
 
                 <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-6 md:gap-10 items-center pt-14">
                     <div className="flex flex-col gap-3 md:gap-5">
@@ -264,10 +278,21 @@ export default function Hero() {
                         </span>
                     </CodeWindow>
                 </div>
-                <div className="max-w-7xl mx-auto w-full">
-                    <FooterComponent />
-                </div>
             </section>
+
+            {/* Separator */}
+            <div
+                className="w-full h-px"
+                style={{
+                    background:
+                        "linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, .08) 30%, rgba(255, 255, 255, .08) 70%, transparent 100%)",
+                }}
+            />
+
+            {/* Footer */}
+            <div className="w-full px-6">
+                <FooterComponent className={"max-w-7xl mx-auto py-12"} />
+            </div>
         </>
     );
 }

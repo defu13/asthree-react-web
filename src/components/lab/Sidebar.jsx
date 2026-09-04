@@ -33,8 +33,8 @@ export default function Sidebar({ children }) {
                 ${open ? "translate-x-0" : "-translate-x-full"}
             `}
                 style={{
-                    height: "calc(100vh - calc(var(--navbar-height)))",
-                    marginTop: "calc(var(--navbar-height))",
+                    height: "calc(100vh - var(--navbar-height))",
+                    marginTop: "var(--navbar-height)",
                 }}
             >
                 {/* Tab container */}
@@ -84,7 +84,7 @@ export default function Sidebar({ children }) {
                 </div>
 
                 <div className="w-full flex justify-between items-end">
-                    <FooterComponent />
+                    <FooterComponent footerMenu={false} />
 
                     {/* Reset All Button */}
                     <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
@@ -118,8 +118,8 @@ export default function Sidebar({ children }) {
                 ${open ? "min-[510px]:left-[450px] left-8" : "left-4"}
                 `}
                 style={{
-                    height: "calc(100vh - calc(var(--navbar-height)))",
-                    marginTop: "calc(var(--navbar-height))",
+                    height: "calc(100vh - var(--navbar-height))",
+                    marginTop: "var(--navbar-height)",
                 }}
             >
                 <div className="flex min-[510px]:flex-col flex-row gap-2">

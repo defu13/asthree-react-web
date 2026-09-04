@@ -26,8 +26,8 @@ export default function DocsSidebar() {
     const navList = (
         <>
             {DOCS_NAV.map((section) => (
-                <div key={section.section} className="flex flex-col gap-0.5">
-                    <span className="text-xs text-neutral-500 uppercase tracking-wider mb-2">
+                <div key={section.section} className="flex flex-col gap-3">
+                    <span className="text-xs text-neutral-500 uppercase font-mono">
                         {section.section}
                     </span>
                     <ul className="relative flex flex-col gap-0.5 border-l border-neutral-800/80 pl-4">

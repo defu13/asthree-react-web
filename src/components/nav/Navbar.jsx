@@ -7,11 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoGithub, Bars } from "@gravity-ui/icons";
 import ThemeToggle from "./ThemeToggle";
-
-const NAV_ITEMS = [
-    { href: "/docs/introduction", label: "Docs" },
-    { href: "/lab", label: "Lab" },
-];
+import { NAV_ITEMS} from "@/lib/NavList";
 
 /**
  * Calcula todos los valores visuales del navbar a partir de su "modo" actual.

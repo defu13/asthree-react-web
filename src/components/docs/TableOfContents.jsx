@@ -54,7 +54,7 @@ export default function TableOfContents({ headings }) {
 
     return (
         <nav className="hidden xl:flex flex-col gap-3 w-56 shrink-0 sticky top-34 self-start border border-neutral-50/10 rounded-xl p-5">
-            <span className="text-xs text-neutral-500 uppercase tracking-wider">
+            <span className="text-xs text-neutral-500 uppercase font-mono">
                 On this page
             </span>
             <ul className="relative flex flex-col gap-0.5 border-l border-neutral-800/80 pl-4">
