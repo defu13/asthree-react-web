@@ -15,10 +15,17 @@ export function CopyButton({ text, className = "" }) {
     // Reutilizamos el hook con la lógica de copiar + feedback temporal
     const { copied, copy } = useCopyToClipboard();
 
+    const handleClick = () => {
+        // Si "text" es una función, la ejecutamos AHORA (con el DOM ya listo)
+        // para obtener el string real; si ya es un string, lo usamos tal cual
+        const value = typeof text === "function" ? text() : text;
+        copy(value);
+    };
+
     return (
         <button
             type="button"
-            onClick={() => copy(text)}
+            onClick={handleClick}
             aria-label="Copy to clipboard"
             className={`cursor-pointer shrink-0 text-neutral-500 hover:text-neutral-200 transition-colors border border-neutral-50/10 hover:border-neutral-50/20 rounded-lg ${className}`}
         >

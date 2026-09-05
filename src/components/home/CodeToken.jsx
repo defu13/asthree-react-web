@@ -71,8 +71,8 @@ export function DragNumberToken({
         <span
             onPointerDown={handlePointerDown}
             title="Drag to change"
-            className="cursor-ew-resize select-none text-emerald-300 touch-none p-0.5 bg-emerald-300/15 rounded-sm hover:bg-emerald-200/20 transition-colors"
-            style={{ touchAction: "none" }} // Evita el scroll táctil mientras arrastramos
+            className="inline-block cursor-ew-resize select-none text-emerald-300 p-0.5 bg-emerald-300/15 rounded-sm hover:bg-emerald-200/20 transition-colors"
+            style={{ touchAction: "pan-y" }} // Evita el scroll táctil mientras arrastramos
         >
             {value.toFixed(1)}
         </span>
