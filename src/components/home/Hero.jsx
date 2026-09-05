@@ -230,12 +230,12 @@ export default function Hero() {
                                         min={6}
                                         max={20}
                                     />
-                                    ,{"\n      "}tintColor:{" "}
+                                    ,{"\n      "}tintColor: &quot;
                                     <ColorPickerToken
                                         value={tintColor}
                                         onChange={setTintColor}
                                     />
-                                    ,{"\n      "}glow:{" "}
+                                    &quot; ,{"\n      "}glow:{" "}
                                     <BooleanToken
                                         value={glow}
                                         onChange={setGlow}

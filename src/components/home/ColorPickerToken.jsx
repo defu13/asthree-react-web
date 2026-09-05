@@ -19,7 +19,7 @@ export function ColorPickerToken({ value, onChange }) {
                     className="w-2.5 h-2.5 rounded-xs"
                 />
                 <span className="text-emerald-300 p-0.5 bg-emerald-300/15 rounded-sm hover:bg-emerald-200/20 transition-colors">
-                    &quot;{value}&quot;
+                    {value}
                 </span>
             </ColorPicker.Trigger>
 
