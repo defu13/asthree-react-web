@@ -33,7 +33,7 @@ function FooterComponent({ className = "", footerMenu = true }) {
                 </div>
             )}
 
-            <div className="w-full flex flex-wrap gap-1 justify-between text-neutral-400 truncate font-mono tracking-tighter text-xs">
+            <div className="w-full max-w-full flex flex-wrap gap-1 justify-between text-neutral-400 truncate font-mono tracking-tighter sm:text-xs text-[9px]">
                 <span className="truncate flex gap-1.5 mr-4">
                     Created by
                     <a
