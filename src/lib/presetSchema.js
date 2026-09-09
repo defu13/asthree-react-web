@@ -63,6 +63,11 @@ export const FIELDS = [
 
   // ui
   /* 36 */ ["ua",  "hsl"],
+
+  // camera.target — AÑADIDO al final para no romper presets ya generados
+  /* 37 */ ["ctx", "f2"],
+  /* 38 */ ["cty", "f2"],
+  /* 39 */ ["ctz", "f2"],
 ];
 
 // Lookup por alias → { idx, type, meta? }
@@ -115,6 +120,11 @@ export const ALIAS_MAP = {
   "postfx.contrastAdjust":           "pc",
   "postfx.brightnessAdjust":         "pb",
   "ui.accentColor":                  "ua",
+
+  // camera.target — nuevo
+  "camera.target.x":                 "ctx",
+  "camera.target.y":                 "cty",
+  "camera.target.z":                 "ctz",
 };
 
 export const ALIAS_REVERSE = Object.fromEntries(

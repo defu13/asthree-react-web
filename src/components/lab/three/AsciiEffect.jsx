@@ -12,6 +12,7 @@ import {
     Vector3,
 } from "three";
 import { useRenderSettings } from "@/lib/renderSettings";
+import { getLivePreview } from "@/lib/livePreview";
 
 const TERMINAL_SYMBOLS = [
     ".",
@@ -384,18 +385,49 @@ class AsciiEffectImpl extends Effect {
         }
 
         this.uniforms.get("time").value = _time;
-        this.uniforms.get("cellSize").value = _cellSize;
-        this.uniforms.get("invert").value = _invert;
-        this.uniforms.get("colorMode").value = _colorMode;
-        this.uniforms.get("asciiStyle").value = _asciiStyle;
+
+        // Cada uniform comprueba primero si hay un override en vivo para su path
+        this.uniforms.get("cellSize").value =
+            getLivePreview("ascii.cellSize") ?? _cellSize;
+        this.uniforms.get("invert").value =
+            getLivePreview("ascii.invert") ?? _invert;
+        this.uniforms.get("colorMode").value =
+            getLivePreview("ascii.color") ?? _colorMode;
+        this.uniforms.get("asciiStyle").value = _asciiStyle; // enum, no tiene slider continuo
         this.uniforms.get("resolution").value = _resolution;
         this.uniforms.get("mousePos").value = _mousePos;
+
+        // Campos que en el constructor original solo se fijaban UNA VEZ
+        // y nunca se actualizaban tras la creación — ahora sí se sincronizan cada frame
+        this.uniforms.get("shadingIntensity").value =
+            getLivePreview("ascii.shadingIntensity") ??
+            this.uniforms.get("shadingIntensity").value;
+
+        this.uniforms.get("contrastAdjust").value =
+            getLivePreview("postfx.contrastAdjust") ??
+            this.uniforms.get("contrastAdjust").value;
+
+        this.uniforms.get("brightnessAdjust").value =
+            getLivePreview("postfx.brightnessAdjust") ??
+            this.uniforms.get("brightnessAdjust").value;
+
+        // tintColor es un Vector3, no un número — necesita reconstruirse
+        // desde el hex si hay un override activo
+        const liveTint = getLivePreview("ascii.tintColor");
+        if (liveTint) {
+            const c = new Color(liveTint);
+            this.uniforms.get("tintColor").value.set(c.r, c.g, c.b);
+        }
+        // si no hay override, el valor ya está fijado desde el último render normal
     }
 }
 
 export const AsciiEffect = forwardRef((props, ref) => {
-    const { resolution = new Vector2(1920, 1080),mousePos = new Vector2(0, 0), characterSet = "terminal" } =
-        props;
+    const {
+        resolution = new Vector2(1920, 1080),
+        mousePos = new Vector2(0, 0),
+        characterSet = "terminal",
+    } = props;
 
     const { ascii, postfx } = useRenderSettings();
     const dpr = typeof window !== "undefined" ? window.devicePixelRatio : 1;

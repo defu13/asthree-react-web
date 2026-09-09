@@ -2,6 +2,7 @@ import { useThree, useFrame } from "@react-three/fiber";
 import { useRenderSettings } from "@/lib/renderSettings";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { getLivePreview } from "@/lib/livePreview";
 
 function CameraController({
     containerRef,
@@ -37,10 +38,18 @@ function CameraController({
     // =========================
     // FOV SOLO CUANDO CAMBIA
     // =========================
-    useEffect(() => {
-        camera.fov = cam.fov;
-        camera.updateProjectionMatrix();
-    }, [cam.fov, camera]);
+    useFrame(() => {
+        // fov se lee en vivo dentro del propio useFrame que ya tienes para el orbit,
+        // en vez de un useEffect separado — así no hace falta updateProjectionMatrix
+        // en cada frame si no ha cambiado, pero si arrastras el slider sí se refleja
+        const fov = getLivePreview("camera.fov") ?? cam.fov;
+        if (camera.fov !== fov) {
+            camera.fov = fov;
+            camera.updateProjectionMatrix();
+        }
+
+        // ... resto del useFrame del orbit, igual que ya tenías
+    });
 
     // =========================
     // ORBIT ANIMATION LOOP
@@ -67,14 +76,19 @@ function CameraController({
         );
 
         const { theta, phi, radius } = orbitRef.current;
-        const t = camOrbitRef.current;
+
+        // El punto al que mira la cámara (camera.target) también necesita
+        // leer el preview en vivo, igual que ya hacemos con position/rotation del modelo
+        const targetX = getLivePreview("camera.target.x") ?? cam.target.x;
+        const targetY = getLivePreview("camera.target.y") ?? cam.target.y;
+        const targetZ = getLivePreview("camera.target.z") ?? cam.target.z;
 
         camera.position.set(
-            cam.target.x + radius * Math.sin(phi) * Math.sin(theta),
-            cam.target.y + radius * Math.cos(phi),
-            cam.target.z + radius * Math.sin(phi) * Math.cos(theta),
+            targetX + radius * Math.sin(phi) * Math.sin(theta),
+            targetY + radius * Math.cos(phi),
+            targetZ + radius * Math.sin(phi) * Math.cos(theta),
         );
-        camera.lookAt(cam.target.x, cam.target.y, cam.target.z);
+        camera.lookAt(targetX, targetY, targetZ);
     });
 
     // =========================

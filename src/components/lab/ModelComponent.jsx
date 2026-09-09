@@ -2,11 +2,12 @@ import { Accordion, Label, Separator, Slider } from "@heroui/react";
 import React from "react";
 import RotationComponent from "./ModelRotationComponent";
 import PositionComponent from "./ModelPositionComponent";
-import { useRenderSettings } from "@/lib/renderSettings";
 import ModelSelector from "./ModelSelector";
+import { useDeferredSetting } from "@/hooks/useDeferredSetting";
 
 function ModelComponent() {
-    const { model, setSettings } = useRenderSettings();
+    const scale = useDeferredSetting("model", "scale");
+    
     const items = [
         {
             id: "rotation",
@@ -56,15 +57,12 @@ function ModelComponent() {
             {/* SCALE */}
             <Slider
                 className="w-full px-4"
-                value={model.scale * 10}
-                minValue={0}
-                maxValue={100}
-                step={1}
-                onChange={(value) =>
-                    setSettings("model", {
-                        scale: value / 10,
-                    })
-                }
+                value={scale.localValue}
+                minValue={0.1}
+                maxValue={10}
+                step={0.1}
+                onChange={scale.onChange}
+                onChangeEnd={scale.onChangeEnd}
             >
                 <Label className="text-xs text-neutral-500 uppercase tracking-wider">Scale</Label>
                 <Slider.Output />

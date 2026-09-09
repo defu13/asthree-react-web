@@ -1,36 +1,33 @@
 import { useRenderSettings } from "@/lib/renderSettings";
-import { ArrowsRotateLeft } from "@gravity-ui/icons";
-import { Button, Label, Slider } from "@heroui/react";
+import { Label, Slider } from "@heroui/react";
 import React from "react";
 import ResetButton from "./ResetButton";
+import { useDeferredNestedSetting } from "@/hooks/useDeferredSetting";
 
 function PositionComponent() {
-    const { model, setSettings, resetProperty } = useRenderSettings();
+    const xAxis = useDeferredNestedSetting("model", "position", "x");
+    const yAxis = useDeferredNestedSetting("model", "position", "y");
+    const zAxis = useDeferredNestedSetting("model", "position", "z");
+    const resetProperty = useRenderSettings((s) => s.resetProperty);
 
     const axes = [
-        { key: "x", label: "X Axis" },
-        { key: "y", label: "Y Axis" },
-        { key: "z", label: "Z Axis" },
+        { key: "x", label: "X Axis", axis: xAxis },
+        { key: "y", label: "Y Axis", axis: yAxis },
+        { key: "z", label: "Z Axis", axis: zAxis },
     ];
 
     return (
         <div className="flex flex-col gap-3">
-            {axes.map(({ key, label }) => (
+            {axes.map(({ key, label, axis }) => (
                 <Slider
                     key={key}
                     className="w-full"
-                    value={model.position[key]}
+                    value={axis.localValue}
                     minValue={-10}
                     maxValue={10}
                     step={0.1}
-                    onChange={(value) =>
-                        setSettings("model", {
-                            position: {
-                                ...model.position,
-                                [key]: value,
-                            },
-                        })
-                    }
+                    onChange={axis.onChange}
+                    onChangeEnd={axis.onChangeEnd}
                 >
                     <Label className="text-xs text-neutral-500 uppercase tracking-wider">{label}</Label>
                     <Slider.Output />

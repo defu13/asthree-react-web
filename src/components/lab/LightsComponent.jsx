@@ -1,23 +1,24 @@
+// src/components/lab/LightsComponent.jsx
 import { Accordion, Label, Slider } from "@heroui/react";
-import React from "react";
 import { useRenderSettings } from "@/lib/renderSettings";
+import { useDeferredSetting } from "@/hooks/useDeferredSetting";
 import DirectionalLightComponent from "./DirectionalLightComponent";
 
 function LightsComponent() {
-    const { lights, setSettings } = useRenderSettings();
+    // Solo se lee "lights" con selector explícito — no re-renderiza
+    // este componente si cambia camera, ascii, postfx, etc.
+    // (aquí solo se usa para leer el valor inicial de displayValue del slider,
+    // el valor real que ve la UI viene de localValue del hook)
 
     const items = [
-        {
-            id: "dir1",
-            label: "Directional Light 1",
-            component: <DirectionalLightComponent lightKey="directional1" />,
-        },
-        {
-            id: "dir2",
-            label: "Directional Light 2",
-            component: <DirectionalLightComponent lightKey="directional2" />,
-        },
+        { id: "dir1", label: "Directional Light 1", component: <DirectionalLightComponent lightKey="directional1" /> },
+        { id: "dir2", label: "Directional Light 2", component: <DirectionalLightComponent lightKey="directional2" /> },
     ];
+
+    // Ambient usa una fórmula invertida particular (10 - ambient)/20 * 100 —
+    // mantenemos esa misma transformación, solo cambiando de dónde viene el valor
+    const { localValue: ambient, onChange: onAmbientChange, onChangeEnd: onAmbientEnd } =
+        useDeferredSetting("lights", "ambient");
 
     return (
         <section className="w-full flex flex-col gap-4 overflow-x-hidden">
@@ -43,18 +44,17 @@ function LightsComponent() {
                     ))}
                 </Accordion>
             </div>
-            {/* AMBIENT */}
+
+            {/* AMBIENT — mantenemos la fórmula de conversión, solo cambia
+                de dónde sale/entra el valor: localValue en vez de lights.ambient directo */}
             <Slider
                 className="w-full px-4"
-                value={((10 - lights.ambient) / 20) * 100}
+                value={((10 - ambient) / 20) * 100}
                 minValue={0}
                 maxValue={100}
                 step={1}
-                onChange={(value) =>
-                    setSettings("lights", {
-                        ambient: 10 - (value / 100) * 20,
-                    })
-                }
+                onChange={(value) => onAmbientChange(10 - (value / 100) * 20)}
+                onChangeEnd={(value) => onAmbientEnd(10 - (value / 100) * 20)}
             >
                 <Label className="text-xs text-neutral-500 uppercase tracking-wider">Ambient</Label>
                 <Slider.Output />

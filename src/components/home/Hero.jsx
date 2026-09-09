@@ -12,6 +12,7 @@ import { ColorPickerToken } from "./ColorPickerToken";
 import { HERO_PRESETS, PRESET_LABELS } from "./presets";
 import { DropdownToken } from "./DropdownToken";
 import FooterComponent from "../ui/FooterComponent";
+import { EntranceAnimation } from "../ui/EntranceAnimation";
 
 // Objeto base completo — evita depender del merge interno del paquete
 const BASE_SETTINGS = {
@@ -148,136 +149,137 @@ export default function Hero() {
                             "linear-gradient(to top, #0a0a0a 0%, transparent 100%)",
                     }}
                 />
+                <EntranceAnimation>
+                    <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-6 md:gap-10 items-center pt-14">
+                        <div className="flex flex-col gap-3 md:gap-5">
+                            <h1 className="text-3xl lg:text-6xl tracking-tight leading-none font-medium">
+                                Interactive ASCII 3D, for React developers
+                            </h1>
+                            <p className="text-neutral-400 max-w-md">
+                                Turn your 3D models into interactive ASCII art.
+                                Mess with the settings, experiment with the
+                                effects, and find a look that feels like yours.
+                            </p>
 
-                <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-6 md:gap-10 items-center pt-14">
-                    <div className="flex flex-col gap-3 md:gap-5">
-                        <h1 className="text-3xl lg:text-6xl tracking-tight leading-none font-medium">
-                            Interactive ASCII 3D, for React developers
-                        </h1>
-                        <p className="text-neutral-400 max-w-md">
-                            Turn your 3D models into interactive ASCII art. Mess
-                            with the settings, experiment with the effects, and
-                            find a look that feels like yours.
-                        </p>
+                            <InstallCommand />
 
-                        <InstallCommand />
-
-                        <div className="flex gap-3">
-                            <Link
-                                href="/docs/introduction"
-                                className={`text-sm px-4 py-2 rounded-lg font-mono font-semibold border transition-all shadow-xl`}
-                                onMouseEnter={() => setIsHovered(true)}
-                                onMouseLeave={() => setIsHovered(false)}
-                                style={{
-                                    filter: `${isHovered ? `drop-shadow(0 0 14px ${backgroundColor}90)` : `drop-shadow(0 0 8px ${backgroundColor}80)`}`,
-                                    borderColor: backgroundColor,
-                                    color: backgroundColor,
-                                    backgroundColor:
-                                        getContrastColor(backgroundColor),
-                                }}
-                            >
-                                Read the docs
-                            </Link>
-                            <Link
-                                href="/lab"
-                                className="font-mono text-sm px-4 py-2 rounded-lg backdrop-blur-md border border-neutral-50/10 hover:bg-neutral-800 transition-colors shadow-xl"
-                            >
-                                Open the Lab
-                            </Link>
+                            <div className="flex gap-3">
+                                <Link
+                                    href="/docs/introduction"
+                                    className={`text-sm px-4 py-2 rounded-lg font-mono font-semibold border transition-all shadow-xl`}
+                                    onMouseEnter={() => setIsHovered(true)}
+                                    onMouseLeave={() => setIsHovered(false)}
+                                    style={{
+                                        filter: `${isHovered ? `drop-shadow(0 0 14px ${backgroundColor}90)` : `drop-shadow(0 0 8px ${backgroundColor}80)`}`,
+                                        borderColor: backgroundColor,
+                                        color: backgroundColor,
+                                        backgroundColor:
+                                            getContrastColor(backgroundColor),
+                                    }}
+                                >
+                                    Read the docs
+                                </Link>
+                                <Link
+                                    href="/lab"
+                                    className="font-mono text-sm px-4 py-2 rounded-lg backdrop-blur-md border border-neutral-50/10 hover:bg-neutral-800 transition-colors shadow-xl"
+                                >
+                                    Open the Lab
+                                </Link>
+                            </div>
                         </div>
-                    </div>
 
-                    <CodeWindow>
-                        <div>
-                            <span className="text-neutral-500">import</span>{" "}
-                            {"{ AsthreeRender }"}{" "}
-                            <span className="text-neutral-500">from</span>{" "}
-                            <span className="text-emerald-300">
-                                &quot;@defu13/asthree-react&quot;
-                            </span>
-                            ;{"\n\n"}
-                            <span className="text-sky-300">
-                                &lt;AsthreeRender
-                            </span>
-                            {"\n  "}model=
-                            <span className="text-emerald-300">
-                                &quot;/models/model.glb&quot;
-                            </span>
-                            {"\n  "}hdr=
-                            <span className="text-emerald-300">
-                                &quot;/hdr/studio.hdr&quot;
-                            </span>
-                            {"\n  "}
-                            <DropdownToken
-                                value={mode}
-                                options={MODE_OPTIONS.filter(
-                                    (o) => o.value !== mode,
-                                )}
-                                onChange={setMode}
-                                colorClass="text-sky-300"
-                                bgClass="bg-sky-300/15"
-                                hoverBgClass="hover:bg-sky-200/20"
-                            />
-                            <span>=</span>
-                            {mode === "settings" ? (
-                                <>
-                                    {"{{"}
-                                    {"\n    "}ascii: {"{"}
-                                    {"\n      "}cellSize:{" "}
-                                    <DragNumberToken
-                                        value={cellSize}
-                                        onChange={setCellSize}
-                                        min={6}
-                                        max={20}
-                                    />
-                                    ,{"\n      "}tintColor: &quot;
-                                    <ColorPickerToken
-                                        value={tintColor}
-                                        onChange={setTintColor}
-                                    />
-                                    &quot; ,{"\n      "}glow:{" "}
-                                    <BooleanToken
-                                        value={glow}
-                                        onChange={setGlow}
-                                    />
-                                    ,{"\n    "}
-                                    {"},"}
-                                    {"\n    "}model: {"{"}
-                                    {"\n      "}autoRotate:{" "}
-                                    <BooleanToken
-                                        value={autoRotate}
-                                        onChange={setAutoRotate}
-                                    />
-                                    ,{"\n    "}
-                                    {"},"}
-                                    {"\n  "}
-                                    {"}}"}
-                                </>
-                            ) : (
-                                <>
-                                    <span className="text-emerald-300">
-                                        &quot;
-                                        <DropdownToken
-                                            value={presetKey}
-                                            options={PRESET_OPTIONS}
-                                            onChange={setPresetKey}
-                                            colorClass="text-emerald-300"
-                                            bgClass="bg-emerald-300/15"
-                                            hoverBgClass="hover:bg-emerald-200/20"
+                        <CodeWindow>
+                            <div>
+                                <span className="text-neutral-500">import</span>{" "}
+                                {"{ AsthreeRender }"}{" "}
+                                <span className="text-neutral-500">from</span>{" "}
+                                <span className="text-emerald-300">
+                                    &quot;@defu13/asthree-react&quot;
+                                </span>
+                                ;{"\n\n"}
+                                <span className="text-sky-300">
+                                    &lt;AsthreeRender
+                                </span>
+                                {"\n  "}model=
+                                <span className="text-emerald-300">
+                                    &quot;/models/model.glb&quot;
+                                </span>
+                                {"\n  "}hdr=
+                                <span className="text-emerald-300">
+                                    &quot;/hdr/studio.hdr&quot;
+                                </span>
+                                {"\n  "}
+                                <DropdownToken
+                                    value={mode}
+                                    options={MODE_OPTIONS.filter(
+                                        (o) => o.value !== mode,
+                                    )}
+                                    onChange={setMode}
+                                    colorClass="text-sky-300"
+                                    bgClass="bg-sky-300/15"
+                                    hoverBgClass="hover:bg-sky-200/20"
+                                />
+                                <span>=</span>
+                                {mode === "settings" ? (
+                                    <>
+                                        {"{{"}
+                                        {"\n    "}ascii: {"{"}
+                                        {"\n      "}cellSize:{" "}
+                                        <DragNumberToken
+                                            value={cellSize}
+                                            onChange={setCellSize}
+                                            min={6}
+                                            max={20}
                                         />
-                                        &quot;
-                                    </span>
-                                </>
-                            )}
-                            {"\n"}
-                            <span className="text-sky-300">/&gt;</span>
-                            {"\n\n"}
-                        </div>
-                        <span className="text-neutral-500 text-[10px] text-right w-full block mt-auto">
-                            🡤 All setting values are editable.
-                        </span>
-                    </CodeWindow>
-                </div>
+                                        ,{"\n      "}tintColor: &quot;
+                                        <ColorPickerToken
+                                            value={tintColor}
+                                            onChange={setTintColor}
+                                        />
+                                        &quot; ,{"\n      "}glow:{" "}
+                                        <BooleanToken
+                                            value={glow}
+                                            onChange={setGlow}
+                                        />
+                                        ,{"\n    "}
+                                        {"},"}
+                                        {"\n    "}model: {"{"}
+                                        {"\n      "}autoRotate:{" "}
+                                        <BooleanToken
+                                            value={autoRotate}
+                                            onChange={setAutoRotate}
+                                        />
+                                        ,{"\n    "}
+                                        {"},"}
+                                        {"\n  "}
+                                        {"}}"}
+                                    </>
+                                ) : (
+                                    <>
+                                        <span className="text-emerald-300">
+                                            &quot;
+                                            <DropdownToken
+                                                value={presetKey}
+                                                options={PRESET_OPTIONS}
+                                                onChange={setPresetKey}
+                                                colorClass="text-emerald-300"
+                                                bgClass="bg-emerald-300/15"
+                                                hoverBgClass="hover:bg-emerald-200/20"
+                                            />
+                                            &quot;
+                                        </span>
+                                    </>
+                                )}
+                                {"\n"}
+                                <span className="text-sky-300">/&gt;</span>
+                                {"\n\n"}
+                            </div>
+                            <span className="text-neutral-500 text-[10px] text-right w-full block mt-auto">
+                                🡤 All setting values are editable.
+                            </span>
+                        </CodeWindow>
+                    </div>
+                </EntranceAnimation>
             </section>
 
             {/* Separator */}

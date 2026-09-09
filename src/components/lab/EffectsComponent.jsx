@@ -1,23 +1,35 @@
 "use client";
 
-import { useRenderSettings } from "@/lib/renderSettings";
 import { AlmostEqual, Sparkles } from "@gravity-ui/icons";
 import { Label, Separator, Slider, ToggleButton } from "@heroui/react";
 import { ColorPickerComponent } from "./ColorPickerComponent";
 import ResetButton from "./ResetButton";
+import { useDeferredSetting } from "@/hooks/useDeferredSetting";
+import { useRenderSettings } from "@/lib/renderSettings";
 
 function EffectsComponent() {
-    const { ascii, postfx, setSettings, resetSection } = useRenderSettings();
+    const cellSize = useDeferredSetting("ascii", "cellSize");
+    const contrastAdjust = useDeferredSetting("postfx", "contrastAdjust");
+    const glowSize = useDeferredSetting("ascii", "glowSize");
+    const glowIntensity = useDeferredSetting("ascii", "glowIntensity");
+    const glow = useDeferredSetting("ascii", "glow");
+    const volumeShading = useDeferredSetting("ascii", "volumeShading");
+    const shadingIntensity = useDeferredSetting("ascii", "shadingIntensity");
+    const { resetSection } = useRenderSettings();
 
     const glowConfig = [
-        { key: "glowIntensity", label: "Glow Intensity" },
-        { key: "glowSize", label: "Glow Size" },
+        {
+            key: "glowIntensity",
+            label: "Glow Intensity",
+            setting: glowIntensity,
+        },
+        { key: "glowSize", label: "Glow Size", setting: glowSize },
     ];
 
     const handleReset = () => {
         resetSection("ascii");
         resetSection("postfx");
-    }
+    };
 
     return (
         <section className="w-full flex flex-col gap-4 overflow-x-hidden">
@@ -30,15 +42,12 @@ function EffectsComponent() {
             {/* Character size */}
             <Slider
                 className="w-full px-4"
-                value={ascii.cellSize}
+                value={cellSize.localValue}
                 minValue={5}
                 maxValue={25}
                 step={1}
-                onChange={(value) =>
-                    setSettings("ascii", {
-                        cellSize: value,
-                    })
-                }
+                onChange={cellSize.onChange}
+                onChangeEnd={cellSize.onChangeEnd}
             >
                 <Label className="text-xs text-neutral-500 uppercase tracking-wider">
                     Character Size
@@ -53,15 +62,12 @@ function EffectsComponent() {
             {/* Contrast */}
             <Slider
                 className="w-full px-4"
-                value={postfx.contrastAdjust}
+                value={contrastAdjust.localValue}
                 minValue={0.1}
                 maxValue={10}
                 step={0.1}
-                onChange={(value) =>
-                    setSettings("postfx", {
-                        contrastAdjust: value,
-                    })
-                }
+                onChange={contrastAdjust.onChange}
+                onChangeEnd={contrastAdjust.onChangeEnd}
             >
                 <Label className="text-xs text-neutral-500 uppercase tracking-wider">
                     Contrast
@@ -84,12 +90,8 @@ function EffectsComponent() {
                     className={`border-neutral-50/10 border backdrop-blur-md rounded-xl`}
                     size="sm"
                     variant="ghost"
-                    isSelected={ascii.glow}
-                    onChange={(value) =>
-                        setSettings("ascii", {
-                            glow: value,
-                        })
-                    }
+                    isSelected={glow.localValue}
+                    onChange={glow.onChangeEnd}
                 >
                     <Sparkles />
                     Glow
@@ -101,16 +103,13 @@ function EffectsComponent() {
                 <Slider
                     key={config.key}
                     className="w-full px-4"
-                    isDisabled={!ascii.glow}
-                    value={ascii[config.key]}
+                    isDisabled={!glow.localValue}
+                    value={config.setting.localValue}
                     minValue={1}
                     maxValue={10}
                     step={0.1}
-                    onChange={(value) =>
-                        setSettings("ascii", {
-                            [config.key]: value,
-                        })
-                    }
+                    onChange={config.setting.onChange}
+                    onChangeEnd={config.setting.onChangeEnd}
                 >
                     <Label className="text-xs text-neutral-500 uppercase tracking-wider">
                         {config.label}
@@ -134,12 +133,8 @@ function EffectsComponent() {
                     className={`border-neutral-50/10 border backdrop-blur-md rounded-xl`}
                     size="sm"
                     variant="ghost"
-                    isSelected={ascii.volumeShading}
-                    onChange={(value) =>
-                        setSettings("ascii", {
-                            volumeShading: value,
-                        })
-                    }
+                    isSelected={volumeShading.localValue}
+                    onChange={volumeShading.onChangeEnd}
                 >
                     <AlmostEqual />
                     Shading
@@ -149,16 +144,13 @@ function EffectsComponent() {
             {/* Shading intensity */}
             <Slider
                 className="w-full px-4"
-                isDisabled={!ascii.volumeShading}
-                value={ascii.shadingIntensity * 10}
-                minValue={-10}
-                maxValue={100}
-                step={1}
-                onChange={(value) =>
-                    setSettings("ascii", {
-                        shadingIntensity: value / 10,
-                    })
-                }
+                isDisabled={!volumeShading.localValue}
+                value={shadingIntensity.localValue}
+                minValue={-5}
+                maxValue={10}
+                step={0.01}
+                onChange={shadingIntensity.onChange}
+                onChangeEnd={shadingIntensity.onChangeEnd}
             >
                 <Label className="text-xs text-neutral-500 uppercase tracking-wider">
                     Shading Intensity

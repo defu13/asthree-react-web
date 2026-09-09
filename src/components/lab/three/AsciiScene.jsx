@@ -10,6 +10,7 @@ import Model from "./Model";
 import { useRenderSettings } from "@/lib/renderSettings";
 import CameraController from "./CameraController";
 import { useCaptureStore } from "@/lib/captureStore";
+import { getLivePreview } from "@/lib/livePreview";
 
 function SceneWithDelayedComposer({ resolution, onReady }) {
     const { gl } = useThree();
@@ -36,14 +37,14 @@ function SceneWithDelayedComposer({ resolution, onReady }) {
     return (
         <>
             <Environment files="/hdr/studio.hdr" background={false} />
-            <ambientLight intensity={lights.ambient} />
-            <directionalLight
-                position={lights.directional1.position}
-                intensity={lights.directional1.intensity}
+            <LiveAmbientLight ambient={lights.ambient} />
+            <LiveDirectionalLight
+                lightKey="directional1"
+                light={lights.directional1}
             />
-            <directionalLight
-                position={lights.directional2.position}
-                intensity={lights.directional2.intensity}
+            <LiveDirectionalLight
+                lightKey="directional2"
+                light={lights.directional2}
             />
             <Suspense fallback={null}>
                 <Model />
@@ -68,6 +69,48 @@ function CanvasRefCapture({ onCanvas }) {
     return null;
 }
 
+/**
+ * Envuelve una directional light y actualiza su posición/intensidad
+ * en cada frame leyendo primero el preview en vivo, cayendo al valor
+ * persistente si no hay override activo. Evita que mover el slider
+ * dispare un re-render de React sobre el elemento <directionalLight>.
+ */
+function LiveDirectionalLight({ lightKey, light }) {
+    const ref = useRef(null);
+
+    useFrame(() => {
+        if (!ref.current) return;
+
+        const x =
+            getLivePreview(`lights.${lightKey}.position.0`) ??
+            light.position[0];
+        const y =
+            getLivePreview(`lights.${lightKey}.position.1`) ??
+            light.position[1];
+        const z =
+            getLivePreview(`lights.${lightKey}.position.2`) ??
+            light.position[2];
+        const intensity =
+            getLivePreview(`lights.${lightKey}.intensity`) ?? light.intensity;
+
+        ref.current.position.set(x, y, z);
+        ref.current.intensity = intensity;
+    });
+
+    return <directionalLight ref={ref} />;
+}
+
+function LiveAmbientLight({ ambient }) {
+    const ref = useRef(null);
+
+    useFrame(() => {
+        if (!ref.current) return;
+        ref.current.intensity = getLivePreview("lights.ambient") ?? ambient;
+    });
+
+    return <ambientLight ref={ref} />;
+}
+
 export default function AsciiScene({
     className,
     enableOrbit = true,
@@ -79,9 +122,9 @@ export default function AsciiScene({
     const containerRef = useRef(null);
     const [mousePos] = useState(() => new Vector2(0, 0));
     const [resolution] = useState(() => new Vector2(1920, 1080));
-    const { camera, ascii } = useRenderSettings();
-    // const [sceneReady, setSceneReady] = useState(false);
-    // const canvasElRef = useRef(null);
+    const ascii = useRenderSettings((s) => s.ascii);
+    const camera = useRenderSettings((s) => s.camera);
+
     const { setCanvas } = useCaptureStore();
 
     const sizeFactor = Math.pow(ascii.glowSize / 2, 1.2);
