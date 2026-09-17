@@ -12,8 +12,6 @@ function CameraController({
     const { camera } = useThree();
     const { camera: cam, setSettings } = useRenderSettings();
 
-    // Ref que siempre tiene el valor actualizado de cam.orbit
-    // sin necesidad de re-registrar los eventos
     const camOrbitRef = useRef(cam.orbit);
     useEffect(() => {
         camOrbitRef.current = cam.orbit;
@@ -32,32 +30,31 @@ function CameraController({
     });
 
     const isDragging = useRef(false);
+    // Estado propio para el pinch — el orbit de un dedo y el zoom de dos
+    // son gestos distintos, y el useFrame necesita saber que dragOrbit
+    // manda también durante un pinch, no solo durante un drag
+    const isPinching = useRef(false);
     const last = useRef({ x: 0, y: 0 });
     const lastPinchDistance = useRef(null);
 
     // =========================
-    // FOV SOLO CUANDO CAMBIA
+    // FOV
     // =========================
     useFrame(() => {
-        // fov se lee en vivo dentro del propio useFrame que ya tienes para el orbit,
-        // en vez de un useEffect separado — así no hace falta updateProjectionMatrix
-        // en cada frame si no ha cambiado, pero si arrastras el slider sí se refleja
         const fov = getLivePreview("camera.fov") ?? cam.fov;
         if (camera.fov !== fov) {
             camera.fov = fov;
             camera.updateProjectionMatrix();
         }
-
-        // ... resto del useFrame del orbit, igual que ya tenías
     });
 
     // =========================
     // ORBIT ANIMATION LOOP
     // =========================
     useFrame(() => {
-        const target = isDragging.current
-            ? dragOrbit.current
-            : camOrbitRef.current;
+        // dragOrbit manda si hay un drag de un dedo/ratón O un pinch de dos dedos
+        const interacting = isDragging.current || isPinching.current;
+        const target = interacting ? dragOrbit.current : camOrbitRef.current;
 
         orbitRef.current.theta = THREE.MathUtils.lerp(
             orbitRef.current.theta,
@@ -77,8 +74,6 @@ function CameraController({
 
         const { theta, phi, radius } = orbitRef.current;
 
-        // El punto al que mira la cámara (camera.target) también necesita
-        // leer el preview en vivo, igual que ya hacemos con position/rotation del modelo
         const targetX = getLivePreview("camera.target.x") ?? cam.target.x;
         const targetY = getLivePreview("camera.target.y") ?? cam.target.y;
         const targetZ = getLivePreview("camera.target.z") ?? cam.target.z;
@@ -92,20 +87,17 @@ function CameraController({
     });
 
     // =========================
-    // EVENTOS — solo se registran una vez (deps vacías)
+    // EVENTOS
     // =========================
     useEffect(() => {
         const el = containerRef?.current;
         if (!el) return;
-
-        // Si ambos están desactivados, no registrar nada
         if (!enableOrbit && !enableZoom) return;
 
         const startDrag = (x, y) => {
             if (!enableOrbit) return;
             isDragging.current = true;
             last.current = { x, y };
-            // Partir del valor actual del store, no de un closure
             dragOrbit.current = { ...camOrbitRef.current };
         };
 
@@ -127,29 +119,38 @@ function CameraController({
             );
         };
 
-        const endDrag = () => {
-            if (!enableOrbit || !isDragging.current) return;
-
+        // Confirma al store el estado final de dragOrbit y sincroniza los refs.
+        // Sirve tanto para el fin de un drag como para el fin de un pinch,
+        // por eso ya no comprueba isDragging: el llamante decide cuándo toca.
+        const commitOrbit = () => {
             const finalOrbit = { ...dragOrbit.current };
 
-            // Sincronizar los tres refs de forma síncrona
-            // antes de que useFrame lea isDragging como false
             orbitRef.current.theta = finalOrbit.theta;
             orbitRef.current.phi = finalOrbit.phi;
             orbitRef.current.radius = finalOrbit.radius;
 
             camOrbitRef.current = { ...camOrbitRef.current, ...finalOrbit };
 
+            setSettings("camera", { orbit: finalOrbit });
+        };
+
+        const endDrag = () => {
+            if (!enableOrbit || !isDragging.current) return;
             isDragging.current = false;
-            // Usar dragOrbit.current directamente — sin mezclar con cam.orbit del closure
-            setSettings("camera", {
-                orbit: { ...dragOrbit.current },
-            });
+            commitOrbit();
+        };
+
+        const endPinch = () => {
+            if (!isPinching.current) return;
+            isPinching.current = false;
+            lastPinchDistance.current = null;
+            commitOrbit();
         };
 
         const zoomTo = (newRadius) => {
             const clamped = Math.max(1.5, Math.min(10, newRadius));
             dragOrbit.current.radius = clamped;
+            camOrbitRef.current = { ...camOrbitRef.current, radius: clamped };
             setSettings("camera", {
                 orbit: { ...camOrbitRef.current, radius: clamped },
             });
@@ -159,11 +160,11 @@ function CameraController({
 
         const onMouseDown = (e) => {
             startDrag(e.clientX, e.clientY);
-            el.style.cursor = "grabbing";
+            if (enableOrbit) el.style.cursor = "grabbing";
         };
         const onMouseUp = () => {
             endDrag();
-            el.style.cursor = "grab";
+            if (enableOrbit) el.style.cursor = "grab";
         };
         const onMouseMove = (e) => moveDrag(e.clientX, e.clientY);
 
@@ -175,48 +176,75 @@ function CameraController({
 
         // ── Touch ─────────────────────────────────────────────
 
+        const startPinch = (e) => {
+            // Cancelamos cualquier orbit en curso, pero SIN confirmar todavía:
+            // el gesto continúa como pinch y se confirmará al levantar los dedos
+            isDragging.current = false;
+            isPinching.current = true;
+
+            // Partimos del estado actual para que el pinch acumule sobre él
+            dragOrbit.current = { ...camOrbitRef.current };
+
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            lastPinchDistance.current = Math.hypot(dx, dy);
+        };
+
         const onTouchStart = (e) => {
             if (e.touches.length === 1 && enableOrbit) {
                 startDrag(e.touches[0].clientX, e.touches[0].clientY);
             } else if (e.touches.length === 2 && enableZoom) {
-                isDragging.current = false;
-                const dx = e.touches[0].clientX - e.touches[1].clientX;
-                const dy = e.touches[0].clientY - e.touches[1].clientY;
-                lastPinchDistance.current = Math.hypot(dx, dy);
+                startPinch(e);
             }
         };
 
         const onTouchMove = (e) => {
             e.preventDefault();
 
-            if (e.touches.length === 1 && enableOrbit) {
+            if (e.touches.length === 1 && enableOrbit && isDragging.current) {
                 moveDrag(e.touches[0].clientX, e.touches[0].clientY);
             } else if (
                 e.touches.length === 2 &&
                 enableZoom &&
+                isPinching.current &&
                 lastPinchDistance.current !== null
             ) {
                 const dx = e.touches[0].clientX - e.touches[1].clientX;
                 const dy = e.touches[0].clientY - e.touches[1].clientY;
                 const distance = Math.hypot(dx, dy);
+
                 const delta = lastPinchDistance.current - distance;
                 lastPinchDistance.current = distance;
 
+                // Acumulamos sobre dragOrbit (no sobre camOrbitRef), que es
+                // lo que el useFrame está leyendo mientras isPinching es true
                 dragOrbit.current.radius = Math.max(
                     1.5,
-                    Math.min(10, camOrbitRef.current.radius + delta * 0.03),
+                    Math.min(10, dragOrbit.current.radius + delta * 0.03),
                 );
             }
         };
 
         const onTouchEnd = (e) => {
             if (e.touches.length === 0) {
-                lastPinchDistance.current = null;
+                // Se levantaron todos los dedos: cerramos el gesto que estuviera activo
+                endPinch();
                 endDrag();
-            } else if (e.touches.length === 1 && enableOrbit) {
-                lastPinchDistance.current = null;
-                startDrag(e.touches[0].clientX, e.touches[0].clientY);
+            } else if (e.touches.length === 1) {
+                // Queda un dedo tras un pinch: confirmamos el zoom
+                // y retomamos como orbit desde la posición del dedo restante
+                endPinch();
+                if (enableOrbit) {
+                    startDrag(e.touches[0].clientX, e.touches[0].clientY);
+                }
             }
+        };
+
+        const onTouchCancel = () => {
+            // El navegador puede robar el gesto (scroll, llamada entrante...):
+            // cerramos limpiamente en vez de dejar los refs colgados
+            endPinch();
+            endDrag();
         };
 
         // ── Registro ──────────────────────────────────────────
@@ -228,6 +256,7 @@ function CameraController({
         el.addEventListener("touchstart", onTouchStart, { passive: true });
         el.addEventListener("touchmove", onTouchMove, { passive: false });
         el.addEventListener("touchend", onTouchEnd, { passive: true });
+        el.addEventListener("touchcancel", onTouchCancel, { passive: true });
 
         return () => {
             el.removeEventListener("mousedown", onMouseDown);
@@ -237,6 +266,7 @@ function CameraController({
             el.removeEventListener("touchstart", onTouchStart);
             el.removeEventListener("touchmove", onTouchMove);
             el.removeEventListener("touchend", onTouchEnd);
+            el.removeEventListener("touchcancel", onTouchCancel);
         };
     }, [enableOrbit, enableZoom]);
 

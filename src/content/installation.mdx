@@ -5,21 +5,17 @@
 - React 18 or newer
 - A project that can serve static assets (`.glb` models, `.hdr` files) from a `public` folder — this works out of the box with Next.js, Vite, and Create React App
 
+<PackageManagerTabs />
+
 ## Install the package
 
-```bash
-npm i @defu13/asthree-react
-```
+<InstallSnippet command="npm i @defu13/asthree-react" />
 
 ## Install peer dependencies
 
 The component relies on the React Three Fiber ecosystem. These are listed as peer dependencies and must be installed alongside the package:
 
-```bash
-npm i react react-dom three @react-three/fiber @react-three/drei @react-three/postprocessing postprocessing
-```
-
-If you're using a package manager other than npm, translate the command accordingly (`pnpm add`, `yarn add`).
+<InstallSnippet command="npm i react react-dom three @react-three/fiber @react-three/drei @react-three/postprocessing postprocessing" />
 
 ## Assets you'll need
 
@@ -27,19 +23,23 @@ The component doesn't ship with a default model or lighting file — you provide
 
 ### HDR lighting file
 
-Download a free HDR environment map from [Poly Haven](https://polyhaven.com/a/studio_small_03) and place it in your project's public folder:
+Download a free HDR environment map, recommended from [Poly Haven](https://polyhaven.com/a/studio_small_03), and place it in your project's public folder:
 
+```bash
 public/hdr/studio.hdr
-
+```
 
 ### 3D model file
 
-Download a free `.glb` model from [Sketchfab](https://sketchfab.com/feed) and place it at:
+Download a free `.glb` model, recommended from [Sketchfab](https://sketchfab.com/feed), and place it at:
 
+```bash
 public/models/model.glb
-
+```
 
 Only `.glb` is supported — if your model is in another format (`.gltf` with separate textures, `.fbx`, `.obj`), convert it to `.glb` first. Most 3D software and online converters support this.
+
+It is recommended to use small files (15 MB or less) for better performance.
 
 ## Verify the installation
 
@@ -50,7 +50,7 @@ import { AsthreeRender } from "@defu13/asthree-react";
 
 export default function App() {
     return (
-        <div style={{ width: "100%", height: "500px" }}>
+        <div style={{ width: "100%", height: "100%" }}>
             <AsthreeRender model="/models/model.glb" hdr="/hdr/studio.hdr" />
         </div>
     );

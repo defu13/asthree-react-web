@@ -50,7 +50,7 @@ export default function DocsSidebar() {
                                     <Link
                                         href={href}
                                         onClick={() => setMobileOpen(false)}
-                                        className={`block text-sm py-1.5 px-3 rounded-lg transition-colors ${
+                                        className={`block text-sm py-1.5 rounded-lg transition-colors ${
                                             active
                                                 ? "text-violet-300"
                                                 : "text-neutral-400 hover:text-neutral-100"
@@ -70,7 +70,7 @@ export default function DocsSidebar() {
     return (
         <>
             {/* ── Versión desktop — sidebar fijo lateral (a partir de "md") ── */}
-            <aside className="hidden md:flex w-56 shrink-0 flex-col gap-6 px-8 pt-24 sticky top-0 self-start h-dvh overflow-y-auto border-r border-neutral-50/10">
+            <aside className="hidden md:flex w-56 shrink-0 flex-col gap-6 px-6 pt-24 sticky top-0 self-start h-dvh overflow-y-auto border-r border-neutral-50/10">
                 {navList}
             </aside>
 

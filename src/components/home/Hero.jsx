@@ -181,7 +181,7 @@ export default function Hero() {
                                 </Link>
                                 <Link
                                     href="/lab"
-                                    className="font-mono text-sm px-4 py-2 rounded-lg backdrop-blur-md border border-neutral-50/10 hover:bg-neutral-800 transition-colors shadow-xl"
+                                    className="font-mono text-sm px-4 py-2 rounded-lg backdrop-blur-md border border-neutral-50/10 hover:bg-neutral-800 transition-colors text-neutral-300 shadow-xl"
                                 >
                                     Open the Lab
                                 </Link>

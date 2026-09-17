@@ -39,8 +39,8 @@ function getNavbarStyle(mode, isActive) {
         borderColor: isActive ? "rgba(245,245,245,0.1)" : "rgba(245,245,245,0)",
         backgroundColor: isActive ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0)",
         blur: isActive ? "blur(12px)" : "blur(0px)",
-        wrapperClass: "border rounded-xl mt-3",
-        outerPadding: "px-6",
+        wrapperClass: isActive ? "border rounded-xl mt-3" : "border-0 rounded-xl mt-3",
+        outerPadding: isActive ? "px-6" : "",
     };
 }
 
@@ -95,7 +95,7 @@ export default function Navbar() {
 
     return (
         <div
-            className={`fixed top-0 left-0 w-full z-50 flex justify-center pointer-events-none ${style.outerPadding}`}
+            className={`fixed top-0 left-0 w-full z-50 flex justify-center pointer-events-none transition-all ${style.outerPadding}`}
         >
             <motion.nav
                 animate={{

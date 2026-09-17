@@ -30,7 +30,7 @@ export default async function DocPage({ params }) {
     const headings = extractHeadings(source);
 
     return (
-        <div className="flex gap-12 md:px-8 px-6 pb-10 pt-20 items-start max-w-5xl mx-auto">
+        <div className="flex gap-12 pl-8 pr-6 pb-10 pt-20 items-start max-w-5xl mx-auto">
             <DocsContent source={source} headings={headings} />
         </div>
     );

@@ -6,8 +6,9 @@ import TableOfContents from "@/components/docs/TableOfContents";
 import remarkGfm from "remark-gfm";
 import { MdxPre } from "@/components/docs/MdxPre";
 import { MdxTable } from "@/components/docs/MdxTable";
-import { AnimatePresence, motion } from "motion/react";
 import { DocsAnimatedWrapper } from "./DocsAnimatedWrapper";
+import { InstallSnippet } from "./InstallSnippet";
+import { PackageManagerTabs } from "./PackageManagerTabs";
 
 function DocsContent({ source, headings }) {
     return (
@@ -15,7 +16,7 @@ function DocsContent({ source, headings }) {
             <DocsAnimatedWrapper>
                 <MDXRemote
                     source={source}
-                    components={{ pre: MdxPre, table: MdxTable }}
+                    components={{ pre: MdxPre, table: MdxTable, InstallSnippet, PackageManagerTabs, }}
                     options={{
                         mdxOptions: {
                             remarkPlugins: [remarkGfm],
