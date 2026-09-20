@@ -3,16 +3,46 @@
 @import "@heroui/styles";
 
 :root {
-    --accent: #5C3FF2;
-    --color-accent: #5C3FF2;
+    --accent: #5c3ff2;
+    --color-accent: #5c3ff2;
     --color-accent-soft: rgba(107, 81, 240, 0.15);
     --color-selection: rgba(201, 201, 201, 0.164);
     --navbar-height: 70px;
+    color-scheme: dark;
 }
+
+/* Estilo de scrollbar personalizado, coherente con la paleta del sitio */
+html {
+    scrollbar-color: #404040 transparent; /* thumb, track */
+    /* scrollbar-width: thin; */
+}
+
+/* Fallback WebKit (Chrome/Edge/Safari) para el mismo efecto */
+/* ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #171717;
+}
+::-webkit-scrollbar-thumb {
+    background: #404040;
+    border-radius: 8px;
+    border: 2px solid #171717;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #525252;
+} */
+
+/* .asthree-lab{
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+} */
 
 @theme {
     --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+    --font-mono:
+        ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas,
+        monospace;
 
     --breakpoint-xs: 480px;
 }
@@ -26,31 +56,6 @@ body {
 
 ::selection {
     background-color: var(--color-selection);
-}
-
-/* WebKit */
-::-webkit-scrollbar {
-    width: 6px;
-}
-
-/* fondo */
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.4);
-}
-
-/* Firefox */
-* {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
 @keyframes spin-once-left {
@@ -172,9 +177,25 @@ html.theme-light video {
 
 /* Icono del tema */
 /* Por defecto (tema oscuro): mostrar sol, ocultar luna */
-.theme-icon-sun  { display: block; }
-.theme-icon-moon { display: none; }
+.theme-icon-sun {
+    display: block;
+}
+.theme-icon-moon {
+    display: none;
+}
 
 /* Tema claro: mostrar luna, ocultar sol */
-html.theme-light .theme-icon-sun  { display: none; }
-html.theme-light .theme-icon-moon { display: block; }
+html.theme-light .theme-icon-sun {
+    display: none;
+}
+html.theme-light .theme-icon-moon {
+    display: block;
+}
+
+/* Oculta la scrollbar pero mantiene el scroll */
+.hide-scrollbar::-webkit-scrollbar {
+    background: 0 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    display: none !important;
+}

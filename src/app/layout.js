@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
             <head>
                 <script dangerouslySetInnerHTML={{ __html: themeScript }} />
             </head>
-            <body className="antialiased font-sans">
+            <body className="antialiased font-sans" style={{overflow: "hidden"}}>
                 <Navbar />
                 {children}
             </body>

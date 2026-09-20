@@ -3,11 +3,19 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "motion/react";
+import { useScrollContainer } from "@/lib/ScrollContainerContext";
 
 const OFFSET = 120; // navbar height + margen de respiro
 
 export default function TableOfContents({ headings }) {
     const [activeId, setActiveId] = useState(headings[0]?.id ?? null);
+
+    const containerRef = useScrollContainer();
+
+    const getScrollEl = useCallback(
+        () => containerRef?.current ?? window,
+        [containerRef],
+    );
 
     const updateActive = useCallback(() => {
         let current = null;
@@ -27,7 +35,9 @@ export default function TableOfContents({ headings }) {
     useEffect(() => {
         if (!headings.length) return;
 
+        const scrollEl = getScrollEl();
         let ticking = false;
+
         const onScroll = () => {
             if (ticking) return;
             ticking = true;
@@ -38,22 +48,45 @@ export default function TableOfContents({ headings }) {
         };
 
         updateActive();
-        window.addEventListener("scroll", onScroll, { passive: true });
-        return () => window.removeEventListener("scroll", onScroll);
-    }, [headings, updateActive]);
+
+        // Escuchamos el scroll en el elemento correcto: el div del layout
+        // si existe, o window como fallback fuera de /docs
+        scrollEl.addEventListener("scroll", onScroll, { passive: true });
+        return () => scrollEl.removeEventListener("scroll", onScroll);
+    }, [headings, updateActive, getScrollEl]);
 
     const handleClick = (id) => (e) => {
         e.preventDefault();
         const el = document.getElementById(id);
         if (!el) return;
-        const top = el.getBoundingClientRect().top + window.scrollY - OFFSET + 8;
-        window.scrollTo({ top, behavior: "smooth" });
+
+        const scrollEl = getScrollEl();
+
+        if (scrollEl === window) {
+            // Comportamiento original: la ventana es quien hace scroll
+            const top = el.getBoundingClientRect().top + window.scrollY - OFFSET + 8;
+            window.scrollTo({ top, behavior: "smooth" });
+        } else {
+            // El contenedor interno es quien hace scroll: calculamos la
+            // posición del heading RELATIVA al propio contenedor, no a la
+            // ventana, y desplazamos scrollTop en vez de window.scrollTo
+            const containerRect = scrollEl.getBoundingClientRect();
+            const elRect = el.getBoundingClientRect();
+            const currentScrollTop = scrollEl.scrollTop;
+
+            // Diferencia entre dónde está el heading ahora mismo respecto
+            // al contenedor, ajustada por el offset del navbar
+            const targetScrollTop =
+                currentScrollTop + (elRect.top - containerRect.top) - OFFSET + 8;
+
+            scrollEl.scrollTo({ top: targetScrollTop, behavior: "smooth" });
+        }
     };
 
     if (!headings.length) return null;
 
     return (
-        <nav className="hidden xl:flex flex-col gap-3 w-56 shrink-0 sticky top-34 self-start border border-neutral-50/10 rounded-xl p-5">
+        <nav className="hidden xl:flex flex-col gap-3 w-56 shrink-0 sticky top-6 self-start border border-neutral-50/10 rounded-xl p-5">
             <span className="text-xs text-neutral-500 uppercase font-mono">
                 On this page
             </span>
@@ -66,7 +99,10 @@ export default function TableOfContents({ headings }) {
                                 <motion.span
                                     layoutId="toc-indicator"
                                     className="absolute -left-[17px] top-0.5 bottom-0.5 w-[2px] rounded-full bg-violet-400"
-                                    transition={{ duration: 0.25, ease: "easeOut" }}
+                                    transition={{
+                                        duration: 0.25,
+                                        ease: "easeOut",
+                                    }}
                                 />
                             )}
                             <a

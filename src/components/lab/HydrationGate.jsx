@@ -15,7 +15,7 @@ export default function HydrationGate({ children }) {
                     initial={{ opacity: 1 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.5, }}
                     className="w-screen h-screen flex items-center justify-center"
                 >
                     <LoadingSpinner />

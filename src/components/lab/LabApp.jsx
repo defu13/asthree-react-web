@@ -5,6 +5,7 @@ import RenderControls from "./RenderControls";
 import Sidebar from "./Sidebar";
 import useAccentColor from "@/hooks/useAccentColor";
 import usePresetSync from "@/hooks/usePresetSync";
+import { AnimatePresence, motion } from "motion/react";
 
 function AccentSync() {
     useAccentColor();
@@ -18,7 +19,7 @@ function PresetSync() {
 
 function LabApp() {
     return (
-        <div className="font-mono dark">
+        <div className="font-mono dark asthree-lab">
             <PresetSync />
             <AccentSync />
             <HydrationGate>
@@ -26,11 +27,21 @@ function LabApp() {
                     <Sidebar>
                         <RenderControls />
                     </Sidebar>
-                    <AsciiScene />
+                    <AnimatePresence>
+                        <motion.div
+                        className="w-full h-full"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.5, delay: 1 }}
+                        >
+                            <AsciiScene />
+                        </motion.div>
+                    </AnimatePresence>
                 </main>
             </HydrationGate>
             <div className="absolute block inset-0 -z-20 pointer-events-none">
-                <Noise patternAlpha={4}  />
+                <Noise patternAlpha={4} />
             </div>
         </div>
     );

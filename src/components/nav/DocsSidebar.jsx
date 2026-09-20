@@ -70,12 +70,12 @@ export default function DocsSidebar() {
     return (
         <>
             {/* ── Versión desktop — sidebar fijo lateral (a partir de "md") ── */}
-            <aside className="hidden md:flex w-56 shrink-0 flex-col gap-6 px-6 pt-24 sticky top-0 self-start h-dvh overflow-y-auto border-r border-neutral-50/10">
+            <aside className="hidden md:flex w-56 shrink-0 flex-col gap-6 px-6 pt-6 sticky top-0 self-start h-dvh overflow-y-auto border-r border-neutral-50/10 max-h-[calc(100vh-var(--navbar-height))]">
                 {navList}
             </aside>
 
             {/* ── Versión móvil — botón + desplegable (por debajo de "md") ── */}
-            <div className="md:hidden flex flex-col gap-3 w-full sticky top-[var(--navbar-height)] z-30 backdrop-blur-md border-b border-neutral-50/10">
+            <div className="md:hidden flex flex-col gap-3 w-full sticky top-0 z-30 backdrop-blur-md border-b border-neutral-50/10">
                 <button
                     onClick={() => setMobileOpen((o) => !o)}
                     className="w-full flex items-center gap-2 px-6 py-3 text-sm text-neutral-300 cursor-pointer hover:text-neutral-100 transition-colors"

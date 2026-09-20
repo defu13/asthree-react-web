@@ -17,7 +17,7 @@ export function DocsAnimatedWrapper({ children }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="prose prose-invert max-w-none flex-1 min-w-0 pt-4"
+            className="prose prose-invert max-w-none flex-1 min-w-0"
         >
             {children}
         </motion.article>

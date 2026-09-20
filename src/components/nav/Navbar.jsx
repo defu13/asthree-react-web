@@ -117,7 +117,7 @@ export default function Navbar() {
                     <div className="flex items-center xs:gap-6 gap-3">
                         <Link
                             href="/"
-                            className="font-semibold tracking-tight text-neutral-50 text-shadow-md leading-4 not-xs:text-sm"
+                            className="font-semibold tracking-tight text-neutral-50 leading-4 not-xs:text-sm"
                         >
                             Asthree React
                         </Link>

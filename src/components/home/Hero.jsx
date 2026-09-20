@@ -115,7 +115,7 @@ export default function Hero() {
         mode === "preset" ? activePreset.accentColor : tintColor;
 
     return (
-        <>
+        <div className="h-full min-h-0 max-h-screen overflow-y-auto">
             <section className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden md:p-6 px-6 pb-6 pt-12">
                 {/* Fade top */}
                 <div className="absolute inset-x-0 top-0 h-44 bg-linear-to-b from-black/45 to-transparent pointer-events-none -z-10 "></div>
@@ -295,6 +295,6 @@ export default function Hero() {
             <div className="w-full px-6">
                 <FooterComponent className={"max-w-7xl mx-auto py-12"} />
             </div>
-        </>
+        </div>
     );
 }
