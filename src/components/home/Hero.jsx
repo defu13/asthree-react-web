@@ -13,6 +13,7 @@ import { HERO_PRESETS, PRESET_LABELS } from "./presets";
 import { DropdownToken } from "./DropdownToken";
 import FooterComponent from "../ui/FooterComponent";
 import { EntranceAnimation } from "../ui/EntranceAnimation";
+import { useRegisterScrollContainer } from "@/lib/ScrollContainerContext";
 
 // Objeto base completo — evita depender del merge interno del paquete
 const BASE_SETTINGS = {
@@ -91,6 +92,8 @@ export function getContrastColor(hex) {
 }
 
 export default function Hero() {
+    const registerRef = useRegisterScrollContainer();
+    
     const [mode, setMode] = useState("settings"); // "settings" | "preset"
     const [presetKey, setPresetKey] = useState("neon");
 
@@ -115,7 +118,7 @@ export default function Hero() {
         mode === "preset" ? activePreset.accentColor : tintColor;
 
     return (
-        <div className="h-full min-h-0 max-h-screen overflow-y-auto">
+        <div ref={registerRef} className="h-full min-h-0 max-h-screen overflow-y-auto">
             <section className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden md:p-6 px-6 pb-6 pt-12">
                 {/* Fade top */}
                 <div className="absolute inset-x-0 top-0 h-44 bg-linear-to-b from-black/45 to-transparent pointer-events-none -z-10 "></div>

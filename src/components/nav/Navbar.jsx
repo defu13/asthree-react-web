@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { LogoGithub, Bars } from "@gravity-ui/icons";
 import ThemeToggle from "./ThemeToggle";
 import { NAV_ITEMS} from "@/lib/NavList";
+import { useScrollContainer } from "@/lib/ScrollContainerContext";
 
 /**
  * Calcula todos los valores visuales del navbar a partir de su "modo" actual.
@@ -69,18 +70,32 @@ export default function Navbar() {
         : "floating";
 
     const [scrolled, setScrolled] = useState(false);
-
     const [mobileOpen, setMobileOpen] = useState(false);
+
+    const containerRef = useScrollContainer();
 
     // Detectar cuando se hace scroll
     useEffect(() => {
+        // En modo "docs" el navbar no cambia con el scroll (ver getNavbarStyle),
+        // así que ni siquiera hace falta escuchar nada — nos ahorramos
+        // el listener por completo en esas rutas
+        if (mode === "docs") {
+            setScrolled(false);
+            return;
+        }
+
+        const scrollEl = containerRef ?? window;
+
         const onScroll = () => {
-            setScrolled(window.scrollY > 16); // umbral de 16px antes de activar
+            // scrollY solo existe en window; un div normal usa scrollTop
+            const y = scrollEl === window ? window.scrollY : scrollEl.scrollTop;
+            setScrolled(y > 16);
         };
+
         onScroll();
-        window.addEventListener("scroll", onScroll, { passive: true });
-        return () => window.removeEventListener("scroll", onScroll);
-    }, []);
+        scrollEl.addEventListener("scroll", onScroll, { passive: true });
+        return () => scrollEl.removeEventListener("scroll", onScroll);
+    }, [mode, containerRef]);
 
     // Cierra el desplegable móvil automáticamente al cambiar de ruta
     useEffect(() => {

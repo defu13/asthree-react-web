@@ -13,7 +13,7 @@ export default function TableOfContents({ headings }) {
     const containerRef = useScrollContainer();
 
     const getScrollEl = useCallback(
-        () => containerRef?.current ?? window,
+        () => containerRef ?? window, // ← sin .current
         [containerRef],
     );
 
@@ -64,7 +64,8 @@ export default function TableOfContents({ headings }) {
 
         if (scrollEl === window) {
             // Comportamiento original: la ventana es quien hace scroll
-            const top = el.getBoundingClientRect().top + window.scrollY - OFFSET + 8;
+            const top =
+                el.getBoundingClientRect().top + window.scrollY - OFFSET + 8;
             window.scrollTo({ top, behavior: "smooth" });
         } else {
             // El contenedor interno es quien hace scroll: calculamos la
@@ -77,7 +78,10 @@ export default function TableOfContents({ headings }) {
             // Diferencia entre dónde está el heading ahora mismo respecto
             // al contenedor, ajustada por el offset del navbar
             const targetScrollTop =
-                currentScrollTop + (elRect.top - containerRect.top) - OFFSET + 8;
+                currentScrollTop +
+                (elRect.top - containerRect.top) -
+                OFFSET +
+                8;
 
             scrollEl.scrollTo({ top: targetScrollTop, behavior: "smooth" });
         }
