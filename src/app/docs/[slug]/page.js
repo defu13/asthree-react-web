@@ -7,6 +7,18 @@ import { extractHeadings } from "@/lib/toc";
 import { notFound } from "next/navigation";
 import DocsContent from "@/components/docs/DocsContent";
 
+export async function generateMetadata({ params }) {
+    const { slug } = await params;
+    const item = DOCS_FLAT.find((i) => i.slug === slug);
+
+    return {
+        title: item?.label ?? "Documentation",
+        alternates: {
+            canonical: `/docs/${slug}`,
+        },
+    };
+}
+
 export async function generateStaticParams() {
     return DOCS_FLAT.map((item) => ({ slug: item.slug }));
 }

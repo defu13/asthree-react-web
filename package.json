@@ -17,6 +17,7 @@
     "@react-three/fiber": "^9.7.0",
     "@react-three/postprocessing": "^3.0.5",
     "@shikijs/rehype": "^4.4.3",
+    "@vercel/analytics": "^2.0.1",
     "github-slugger": "^2.0.0",
     "gsap": "^3.15.0",
     "motion": "^13.1.1",

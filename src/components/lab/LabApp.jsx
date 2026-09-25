@@ -1,3 +1,4 @@
+"use client";
 import AsciiScene from "./three/AsciiScene";
 import HydrationGate from "./HydrationGate";
 import Noise from "./Noise";
