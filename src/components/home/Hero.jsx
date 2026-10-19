@@ -14,6 +14,7 @@ import { DropdownToken } from "./DropdownToken";
 import FooterComponent from "../ui/FooterComponent";
 import { EntranceAnimation } from "../ui/EntranceAnimation";
 import { useRegisterScrollContainer } from "@/lib/ScrollContainerContext";
+import Noise from "../ui/Noise";
 
 // Objeto base completo — evita depender del merge interno del paquete
 const BASE_SETTINGS = {
@@ -130,6 +131,11 @@ export default function Hero() {
                     className="absolute inset-0 -z-20"
                 />
 
+                {/* Noise */}
+                <div className="absolute inset-0 -z-25 opacity-15 w-full h-full">
+                    <Noise />
+                </div>
+
                 {/* Background gradient */}
                 <div className="absolute inset-0 -z-30 opacity-65">
                     <Grainient
@@ -137,8 +143,7 @@ export default function Hero() {
                         color1={backgroundColor}
                         color2="#303030"
                         color3="#303030"
-                        grainAmount={0.05}
-                        grainAnimated={true}
+                        grainAmount={0}
                         saturation={0.4}
                         timeSpeed={0.3}
                     />
